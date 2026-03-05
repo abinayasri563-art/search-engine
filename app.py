@@ -7,13 +7,30 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 @app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
-    return render_template("index.html")
+    if request.method == "POST":
+        query = request.form.get("query", "")
+        return render_template(
+            "index.html",
+            doc_count=0,
+            vocab_size=0,
+            results={
+                "ranked": [("sample_doc.txt", 0.95, "default")],
+                "best_score": 0.95,
+                "result_msg": f"Results for '{query}'"
+            },
+            query_input=query,
+            query_terms=query.split(),
+            tables=None
+        )
 
-@app.route("/search", methods=["POST"])
-def search():
-    query = request.form.get("query")
-    return "You searched for: " + str(query)
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    return render_template(
+        "index.html",
+        doc_count=0,
+        vocab_size=0,
+        results=None,
+        query_input="",
+        query_terms=[],
+        tables=None
+    )
