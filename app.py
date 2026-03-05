@@ -10,7 +10,7 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
-@app.route("/search")
+@app.route("/search", methods=["GET", "POST"])
 def search():
     query = request.args.get("query")
     return f"You searched for: {query}"
